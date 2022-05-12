@@ -26,10 +26,10 @@ RUN wget https://www.python.org/ftp/python/3.7.5/Python-3.7.5.tgz
 RUN tar -xf Python-3.7.5.tgz
 WORKDIR Python-3.7.5
 RUN ./configure --enable-optimizations --enable-shared
-RUN sudo make altinstall
+RUN make altinstall
 RUN mkdir /home/shiny/GitHub
 RUN git -C /home/shiny/GitHub/ clone https://github.com/verbal-autopsy-software/pyCrossVA
-RUN sudo ldconfig /usr/local/lib
+RUN ldconfig /usr/local/lib
 RUN pip3.7 install pip setuptools wheel --upgrade
 RUN pip3.7 install -r /home/shiny/GitHub/pyCrossVA/requirements.txt
 WORKDIR /home/shiny/GitHub/pyCrossVA
