@@ -27,23 +27,23 @@ RUN tar -xf Python-3.7.5.tgz
 WORKDIR Python-3.7.5
 RUN ./configure --enable-optimizations --enable-shared
 RUN make altinstall
-RUN mkdir /home/shiny/GitHub
-RUN git -C /home/shiny/GitHub/ clone https://github.com/verbal-autopsy-software/pyCrossVA
+RUN mkdir /root/GitHub
+RUN git -C /root/GitHub/ clone https://github.com/verbal-autopsy-software/pyCrossVA
 RUN ldconfig /usr/local/lib
 RUN pip3.7 install pip setuptools wheel --upgrade
-RUN pip3.7 install -r /home/shiny/GitHub/pyCrossVA/requirements.txt
-WORKDIR /home/shiny/GitHub/pyCrossVA
+RUN pip3.7 install -r /root/GitHub/pyCrossVA/requirements.txt
+WORKDIR /root/GitHub/pyCrossVA
 RUN python3.7 setup.py install
 RUN R CMD javareconf
 RUN R -e "install.packages(c('shiny', 'rmarkdown', 'glue', 'shinyjs', 'openVA'))"
-RUN git -C /home/shiny/GitHub/ clone https://github.com/verbal-autopsy-software/InterVA5
-RUN R CMD INSTALL /home/shiny/GitHub/InterVA5/InterVA5_1.0
-RUN git -C /home/shiny/GitHub/ clone https://github.com/verbal-autopsy-software/InSilicoVA
-RUN R CMD INSTALL /home/shiny/GitHub/InSilicoVA/InSilicoVA
-RUN git -C /home/shiny/GitHub/ clone https://github.com/verbal-autopsy-software/openVA
-RUN R CMD INSTALL /home/shiny/GitHub/openVA
-RUN git -C /home/shiny/GitHub/ clone https://github.com/verbal-autopsy-software/openVA_App
-RUN R CMD INSTALL /home/shiny/GitHub/openVA_App/pkg
+RUN git -C /root/GitHub/ clone https://github.com/verbal-autopsy-software/InterVA5
+RUN R CMD INSTALL /root/GitHub/InterVA5/InterVA5_1.0
+RUN git -C /root/GitHub/ clone https://github.com/verbal-autopsy-software/InSilicoVA
+RUN R CMD INSTALL /root/GitHub/InSilicoVA/InSilicoVA
+RUN git -C /root/GitHub/ clone https://github.com/verbal-autopsy-software/openVA
+RUN R CMD INSTALL /root/GitHub/openVA
+RUN git -C /root/GitHub/ clone https://github.com/verbal-autopsy-software/openVA_App
+RUN R CMD INSTALL /root/GitHub/openVA_App/pkg
 
 # Set up SmartVA-Analyze
 RUN wget -P /opt/SmartVA https://github.com/ihmeuw/SmartVA-Analyze/releases/download/v2.1.0/smartva
