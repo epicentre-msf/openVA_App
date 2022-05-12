@@ -1,5 +1,5 @@
 # Install rocker
-FROM rocker/shiny:4.1.3
+FROM rocker/r-ver:4.1.3
 
 # Install Ubuntu packages
 RUN apt-get update && apt-get install -y \
@@ -35,7 +35,7 @@ RUN pip3.7 install -r /home/shiny/GitHub/pyCrossVA/requirements.txt
 WORKDIR /home/shiny/GitHub/pyCrossVA
 RUN python3.7 setup.py install
 RUN R CMD javareconf
-RUN R -e "install.packages(c('glue', 'shinyjs', 'openVA'), repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages(c('shiny', 'rmarkdown', 'glue', 'shinyjs', 'openVA'))"
 RUN git -C /home/shiny/GitHub/ clone https://github.com/verbal-autopsy-software/InterVA5
 RUN R CMD INSTALL /home/shiny/GitHub/InterVA5/InterVA5_1.0
 RUN git -C /home/shiny/GitHub/ clone https://github.com/verbal-autopsy-software/InSilicoVA
@@ -51,10 +51,13 @@ RUN chmod 755 /opt/SmartVA/smartva
 ENV PATH="/opt/SmartVA:${PATH}"
 
 # Set up app
-RUN mkdir /srv/shiny-server/openVA_App
-RUN echo "appDir <- system.file('app', package = 'openVAapp'); options(shiny.maxRequestSize = 100*1024^2); library(openVAapp); shinyAppDir(appDir)" > /srv/shiny-server/openVA_App/app.R
-RUN chown -R shiny:shiny /srv/shiny-server
-RUN chown -R shiny:shiny /usr/local/lib/R/site-library/openVAapp
+RUN mkdir /root/app
+RUN echo "library(openVAapp); launchApp()" > /root/app/app.R
+
+# open shiny port
+EXPOSE 3838
+
+CMD ["R", "-e", "shiny::runApp('/root/app', port = 3838, host = '0.0.0.0')"]
 
 # Start container with:
 # docker run --rm --user shiny -p 3838:3838 -v /srv/shinylog/:/var/log/shiny-server/ openVA_App
