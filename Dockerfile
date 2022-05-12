@@ -52,15 +52,14 @@ ENV PATH="/opt/SmartVA:${PATH}"
 
 # Set up app
 RUN mkdir /root/app
-RUN echo "library(openVAapp); launchApp()" > /root/app/app.R
+RUN echo "library(openVAapp); options(shiny.maxRequestSize = 100*1024^2, width = 100); shiny::runApp(appDir = system.file('app', package = 'openVAapp'), port = 3838, host = '0.0.0.0')" > /root/app/app.R
 
 # open shiny port
 EXPOSE 3838
 
-CMD ["R", "-e", "shiny::runApp('/root/app', port = 3838, host = '0.0.0.0')"]
+CMD ["R", "-e", "shiny::runApp('/root/app')"]
 
-# Start container with:
-# docker run --rm --user shiny -p 3838:3838 -v /srv/shinylog/:/var/log/shiny-server/ openVA_App
+# Test app
+# https://reports.msf.net/testing/
+# docker run --rm -p 5858:3838 openva R -e "shiny::runApp('/root/app')"
 
-# Open app at:
-# localhost:3838/openVA_App
